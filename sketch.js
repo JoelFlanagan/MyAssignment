@@ -30,7 +30,7 @@ function mouseReleased(){
 }
 
 function nextPage(){
-  window.location.href = "/hero.html";
+  window.location.href = "../hero.html";
 }
 
 function drawButton(){
