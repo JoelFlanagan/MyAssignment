@@ -1,8 +1,8 @@
 let moons = [];
 
 function setup() {
-  createCanvas(1200, 400);
-
+  var cnv = createCanvas(1200, 400);
+  cnv.parent('hero');
   for (let i = 0; i < 20; i++) {
     moons.push(new Moon(random(width), random(height), random(5,50)));
   }
