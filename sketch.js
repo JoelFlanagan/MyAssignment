@@ -30,7 +30,7 @@ function mouseReleased(){
 }
 
 function nextPage(){
-  window.location.href = "https://joelflanagan.github.io/MyAssignment/hero.html";
+  window.location.href = "/hero.html";
 }
 
 function drawButton(){
