@@ -14,7 +14,6 @@ function draw(){
 
   drawButton();
 
-
 }
 
 function windowResized() {//resizing the canvas
@@ -31,7 +30,7 @@ function mouseReleased(){
 }
 
 function nextPage(){
-  window.location.href = "https://www.google.com/";
+  window.location.href = "https://joelflanagan.github.io/MyAssignment/hero.html";
 }
 
 function drawButton(){
@@ -60,8 +59,10 @@ function updateAndDrawWaves(){
   }
 }
 
-function newWave(xPos, yPos){
-  waves.push(new WaveCircle(xPos, yPos));
+function newWave(xOffset, yOffset){
+  xOffset = xOffset ?? 0;
+  yOffset = yOffset ?? 0;
+  waves.push(new WaveCircle(xOffset, yOffset));
   if(waves.length > 3){
     waves.shift();
     print(waves.length);
@@ -71,12 +72,12 @@ function newWave(xPos, yPos){
 }
 
 class WaveCircle{
-  constructor(xPos, yPos){
+  constructor(xOffset, yOffset){
     this.radius = buttonSize;
     this.noiseMult = 0;
     this.noiseSeed = random(100);
-    this.xOffset = xPos;
-    this.yOffset = yPos;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
     push();
     colorMode(HSB);
     this.col = color(random(360),100,100);
