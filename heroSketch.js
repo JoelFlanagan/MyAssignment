@@ -18,6 +18,10 @@ function draw() {
   }
 }
 
+function mouseReleased(){
+  moons.push(new Moon(mouseX, mouseY, random(5,50)));
+}
+
 class Moon {
   constructor(x, y, radius) {
     this.x = x;
