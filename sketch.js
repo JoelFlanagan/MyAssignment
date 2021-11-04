@@ -1,63 +1,102 @@
-let moons = [];
+const buttonSize = 50;
+let waves = [];
 
-function setup() {
-  createCanvas(1200, 400);
+function setup(){
+  createCanvas(windowWidth, windowHeight);
+  background(0);
+  newWave();
+}
 
-  for (let i = 0; i < 20; i++) {
-    moons.push(new Moon(random(width), random(height), random(5,50)));
+function draw(){
+  background(0, 10);
+
+  updateAndDrawWaves();
+
+  drawButton();
+
+
+}
+
+function windowResized() {//resizing the canvas
+  resizeCanvas(windowWidth, windowHeight);
+  background(0);
+}
+
+function mouseReleased(){
+  if(dist(mouseX, mouseY, width/2, height/2) < buttonSize){
+    nextPage();
+  } else {
+    newWave(mouseX-width/2, mouseY-height/2);
   }
 }
 
-function draw() {
-  background(120);
-  strokeWeight(0);
+function nextPage(){
+  window.location.href = "https://www.google.com/";
+}
 
-  for (let i = 0; i < moons.length; i++) {
-    moons[i].update();
-    moons[i].display();
+function drawButton(){
+  push();
+  if(dist(mouseX, mouseY, width/2, height/2) < buttonSize){
+    fill('white');
+  } else {
+    fill('grey');
+  }
+  noStroke();
+  ellipse(width/2, height/2, buttonSize * 2);
+  fill('black');
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  text("Welcome", width/2, height/2);
+  pop();
+}
+
+function updateAndDrawWaves(){
+  for(let wave of waves){
+    wave.update();
+    wave.display();
+  }
+  if(frameCount % 600 == 0){
+    newWave(0,0);
   }
 }
 
-class Moon {
-  constructor(x, y, radius) {
-    this.x = x;
-    this.y = y;
-    this.xSpeed = random(-1,1);
-    this.ySpeed = random(-1,1);
-    this.phase = 0; //0-1
-    this.radius = radius;
-    this.rotation = 0;
+function newWave(xPos, yPos){
+  waves.push(new WaveCircle(xPos, yPos));
+  if(waves.length > 3){
+    waves.shift();
+    print(waves.length);
+  } else {
+    print(waves.length);
   }
+}
 
-  update() {
-    this.x += this.xSpeed;
-    this.y += this.ySpeed;
-    if(this.x > width+this.radius) this.x = 0-this.radius;
-    if(this.x < 0-this.radius) this.x = width+this.radius;
-    if(this.y > height+this.radius) this.y = 0-this.radius;
-    if(this.y < 0-this.radius) this.y = height+this.radius;
-    let toMouseVector = createVector(this.x - mouseX, this.y - mouseY);
-    this.rotation = toMouseVector.heading();
-    this.phase = map(toMouseVector.mag(), 0, this.radius, 1, 0, true);
-  }
-
-  display() {
+class WaveCircle{
+  constructor(xPos, yPos){
+    this.radius = buttonSize;
+    this.noiseMult = 0;
+    this.noiseSeed = random(100);
+    this.xOffset = xPos;
+    this.yOffset = yPos;
     push();
-    translate(this.x, this.y);
-    rotate(this.rotation);
-    let diam = this.radius *2;
-    if (this.phase < 0.5) {
-      fill(255);
-      ellipse(0, 0, diam, diam);
-      fill(0);
-      ellipse(0, 0, (1 - this.phase * 2) * diam, diam);
-      arc(0, 0, diam, diam, PI + HALF_PI, HALF_PI);
-    } else {
-      fill(0);
-      arc(0, 0, diam, diam, PI + HALF_PI, HALF_PI);
-      fill(255);
-      arc(0, 0, diam, diam, HALF_PI, PI + HALF_PI);
-      ellipse(0, 0, (this.phase - 0.5) * 2 * diam, diam);
+    colorMode(HSB);
+    this.col = color(random(360),100,100);
+    pop(); 
+  }
+  update(){
+    this.noiseMult+=0.004;
+    this.radius++;
+  }
+  display(){
+    push();
+    noFill();
+    stroke(this.col);
+    strokeWeight(3);
+    noiseSeed(this.noiseSeed);
+    angleMode(DEGREES);
+    for(let deg = 0; deg < 360; deg+=10){
+      let x = (width/2) + this.xOffset + sin(deg) * noise(sin(deg)*this.noiseMult) * this.radius;
+      let y = (height/2) + this.yOffset + cos(deg) * noise(cos(deg)*this.noiseMult) * this.radius;
+      point(x,y,10);
     }
     pop();
   }
